@@ -70,4 +70,4 @@ More details can be found in the codes file.
 
 # References
 
-Feng, X. Gao, Y. Huang, J. Jiao, Y. and Liu, X. Relative Entropy Gradient Sampler for Unnormalized Distributions. Manuscript. [http://arxiv.org/abs/2110.02787](http://arxiv.org/abs/2110.02787).
+Feng, X. Gao, Y. Huang, J. Jiao, Y. and Liu, X. (2022). Relative Entropy Gradient Sampler for Unnormalized Distributions. Manuscript. [http://arxiv.org/abs/2110.02787](http://arxiv.org/abs/2110.02787).
