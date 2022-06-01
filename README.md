@@ -33,11 +33,11 @@ Useful arguments
 	max_epoch 		= 50000 # the max epoches
 	dataSize 		= 2000  # the size of particles
 	gpuDevice		= True  # if GPU is used
-	lrd				= 5e-4  # 'learning rate for DNN, default=0.0005'
+	lrd			= 5e-4  # 'learning rate for DNN, default=0.0005'
 	batchSize		= 1000  # 'batch size'
 	data_target		= 'gm2_2d'
-	eta				= 5e-4  # 'learning rate for particle update'
-	nlD				= 128   # 'width of hidden layers'
+	eta			= 5e-4  # 'learning rate for particle update'
+	nlD			= 128   # 'width of hidden layers'
 	nm_gauss		= 2     # 'number of components of mixture gaussian'
 
 	radius			= 4.0    # 'radius of mixed Gaussian u(x), the distance of mean from origin'
