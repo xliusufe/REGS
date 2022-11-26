@@ -19,12 +19,13 @@ class Config(object):
 	nm_gauss		= 8     # 'number of components of mixture gaussian'
 
 	radius			= 4.0    # 'radius of mixed Gaussian u(x)'
-	target_std		= np.sqrt(0.03)   # 'std of mixed Gaussian u(x), default is 0.4'
+	target_std		= np.sqrt(0.03)   # 'std of mixed Gaussian u(x), default is 0.03'
 
+	weights 		= 'equal'  # or 'unequal', or np.ones(8)
 	base_mean		= 0.0 	# 'mean of base normal
 	base_std		= 3.0   # 'std of base normal'
-	init_std 		= 3.0
-	init_mean 		= 0.0
+	init_std 		= 3.0   # 'std of initial normal
+	init_mean 		= 0.0   # 'mean of initial normal
 
 	is_decay 		= True  # if decay the learning rate
 	lr_adjust 		= 10000 # decay the learning rate and step size (eta) after each epoch=3e4
@@ -33,7 +34,7 @@ class Config(object):
 	plot_period 	= 10000   # the number of epoches to plot scatter plot or other plots
 	print_period	= 10000   # the number of epoches to print losses and other values
 	save_period 	= 10000   # the number of epoches to save net and Gz
-	Gz_nepoch   	= None   # 'checkpoints/gm/Gz_3gm_1000.pth'
+	Gz_nepoch   	= None    # 'checkpoints/gm/Gz_3gm_1000.pth'
 
 	nd 				= 2      # dimension of target samples
 	nz 				= 2		 # dimension of base sample
@@ -61,9 +62,22 @@ def train(**kwargs):
 	eta 		= opt.eta
 	lrd 		= opt.lrd
 
+	if opt.weights == 'unequal':
+		ms = int(opt.nm_gauss/2)
+		ws = np.hstack( (np.ones(ms), 3*np.ones(opt.nm_gauss-ms)) )
+		opt.weights = ws/sum(ws)
+	elif opt.weights == "equal":
+		ms = opt.nm_gauss
+		ws = np.ones(ms)
+		opt.weights = ws/sum(ws)
+	else:
+		ms = opt.nm_gauss
+		opt.weights = np.ones(ms)/sum(np.ones(ms))
+	print(opt.weights)
+
 	device 		= torch.device('cuda') if opt.gpuDevice else torch.device('cpu')
 	opt.device 	= device
-	torch.pi 	= torch.acos(torch.zeros(1).to(device)) * 2
+	# torch.pi 	= torch.tensor(torch.pi)
 	target_std 	= torch.tensor(opt.target_std).to(device)
 	base_std 	= torch.tensor(opt.base_std).to(device)
 	DRF 		= utils.DRF_def(opt)
@@ -182,7 +196,17 @@ def evaluate(**kwargs):
 	DRF 		= utils.DRF_def(opt)
 	if opt.Gz_nepoch is None: opt.Gz_nepoch = 1
 	data_target = opt.data_target
-
+	if opt.weights == 'unequal':
+		ms = int(opt.nm_gauss/2)
+		ws = np.hstack( (np.ones(ms), 3*np.ones(opt.nm_gauss-ms)) )
+		opt.weights = ws/sum(ws)
+	elif opt.weights == "equal":
+		ms = opt.nm_gauss
+		ws = np.ones(ms)
+		opt.weights = ws/sum(ws)
+	else:
+		ms = opt.nm_gauss
+		opt.weights = np.ones(ms)/sum(np.ones(ms))
 
 	Hx_gen_samp = []
 	test_vector = (torch.ones(opt.nd,1)/np.sqrt(opt.nd)).to(device)
